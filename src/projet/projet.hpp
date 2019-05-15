@@ -2,6 +2,8 @@
 
 #include "../base_exercise/base_exercise.hpp"
 #include "obstacle.hpp"
+#include "terrain.hpp"
+
 
 // Stores some parameters that can be set from the GUI
 struct gui_scene_structure
@@ -30,9 +32,11 @@ struct scene_exercise : base_scene_exercise
 
     // visual representation of a surface
     vcl::mesh_drawable terrain;
-    //obstacle o;
+    vcl::mesh_drawable canyon;
+    obstable o;
 
     gui_scene_structure gui_scene;
 };
+
 
 
