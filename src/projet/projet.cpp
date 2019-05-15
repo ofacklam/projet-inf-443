@@ -7,20 +7,16 @@ using namespace vcl;
 
 
 
-
-float evaluate_terrain_z(float u, float v);
-vec3 evaluate_terrain(float u, float v);
-mesh create_terrain();
-
-
 /** This function is called before the beginning of the animation loop
     It is used to initialize all part-specific data */
 void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure& scene, gui_structure& )
 {
     // Create visual terrain surface
     terrain = create_terrain();
+    canyon = create_canyon();
     terrain.uniform_parameter.color = {0.6f,0.85f,0.5f};
     terrain.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
+    canyon.uniform_parameter.shading.specular = 0.0f;
 
 
     // Setup initial camera mode and position
@@ -44,6 +40,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     // Display terrain
     glPolygonOffset( 1.0, 1.0 );
     terrain.draw(shaders["mesh"], scene.camera);
+    canyon.draw(shaders["mesh"], scene.camera);
 
     if( gui_scene.wireframe ){ // wireframe if asked from the GUI
         glPolygonOffset( 1.0, 1.0 );
