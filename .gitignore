@@ -1,3 +1,6 @@
 # ignore build files
-
 cmake/build
+
+# ignore includes
+.vscode/c_cpp_properties.json
+.vscode/ipch

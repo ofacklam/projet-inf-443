@@ -2,6 +2,29 @@
 
 using namespace vcl;
 
+void terrain::setup() {
+    // Create visual terrain surface
+    terrain_ = create_terrain();
+    canyon_ = create_canyon();
+    terrain_.uniform_parameter.color = {0.6f,0.85f,0.5f};
+    terrain_.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
+    canyon_.uniform_parameter.shading.specular = 0.0f;
+}
+
+void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
+    // Display terrain
+    glPolygonOffset( 1.0, 1.0 );
+    terrain_.draw(shaders["mesh"], scene.camera);
+    canyon_.draw(shaders["mesh"], scene.camera);
+
+    if( wireframe ){ // wireframe if asked from the GUI
+        glPolygonOffset( 1.0, 1.0 );
+        terrain_.draw(shaders["wireframe"], scene.camera);
+        canyon_.draw(shaders["wireframe"], scene.camera);
+    }
+}
+
+
 //Takes x e [0,1] and returns u e [-10,10]
 float normalize(float x) {
     return 20*(x-0.5f);

@@ -31,8 +31,7 @@ struct scene_exercise : base_scene_exercise
     void set_gui();
 
     // visual representation of a surface
-    vcl::mesh_drawable terrain;
-    vcl::mesh_drawable canyon;
+    terrain t;
     obstacle o;
 
     gui_scene_structure gui_scene;
