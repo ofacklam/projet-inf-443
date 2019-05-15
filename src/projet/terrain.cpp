@@ -7,27 +7,18 @@ float normalize(float x) {
     return 20*(x-0.5f);
 }
 
-// Evaluate height of the terrain for any (u,v) \in [0,1]
-float evaluate_terrain_z(float u, float v)
-{
-    float z = 0;
-    
-    return z;
-}
-
 // Evaluate 3D position of the terrain for any (u,v) \in [0,1]
-vec3 evaluate_terrain(float u, float v, float &c)
+vec3 evaluate_terrain(float theta, float v)
 {
-    const float x = normalize(u);
-    const float y = normalize(v);
-    float z = evaluate_terrain_z(u,v);
     // Evaluate Perlin noise
-    const float scaling = 4.0f;
+    const float scaling = 2.0f;
     const int octave = 4;
     const float persistency = 0.5f;
-    const float noise = perlin(scaling*u, scaling*v, octave, persistency);
-    z += noise;
-    c = 0.5f+0.5f*noise;
+    const float noise = perlin(scaling*std::cos(theta), scaling*v, scaling*std::sin(theta), octave, persistency);
+
+    const float x = normalize(v);
+    const float y = (r+0.2*noise)*std::cos(theta);
+    float z = (r+0.2*noise)*std::sin(theta);
 
     return {x,y,z};
 }
@@ -36,10 +27,10 @@ vec3 evaluate_terrain(float u, float v, float &c)
 mesh create_terrain()
 {
     // Number of samples of the terrain is N x N
-    const size_t N = 100;
+    const size_t N = 500;
 
     mesh terrain; // temporary terrain storage (CPU only)
-    terrain.position.resize(N*N);
+    terrain.position.resize(N*(N+1));
 
     // Fill terrain geometry
     for(size_t ku=0; ku<N; ++ku)
@@ -47,20 +38,21 @@ mesh create_terrain()
         for(size_t kv=0; kv<N; ++kv)
         {
             // Compute local parametric coordinates (u,v) \in [0,1]
-            const float u = ku/(N-1.0f);
+            const float theta = 2*3.14*ku/(N-1.0f);
             const float v = kv/(N-1.0f);
 
             // Compute coordinates
-            float c;
-            terrain.position[kv+N*ku] = evaluate_terrain(u,v,c);
+            terrain.position[kv+N*ku] = evaluate_terrain(theta,v);
         }
     }
+    for(size_t kv=0; kv<N; ++kv)
+        terrain.position[kv + N*N] = terrain.position[kv];
 
 
     // Generate triangle organization
     //  Parametric surface with uniform grid sampling: generate 2 triangles for each grid cell
     const unsigned int Ns = N;
-    for(unsigned int ku=0; ku<Ns-1; ++ku)
+    for(unsigned int ku=0; ku<Ns; ++ku)
     {
         for(unsigned int kv=0; kv<Ns-1; ++kv)
         {
@@ -77,36 +69,47 @@ mesh create_terrain()
     return terrain;
 }
 
-vec3 gaussienne_canyon(float u, float v) {
-    const float x = normalize(u);
-    const float y = normalize(v);
-    const float z = std::exp(x-5) + std::exp(5-x) -0.2f;
+vec3 gaussienne_canyon(float theta, float v) {
+    const float radius = 4.0f + std::exp(5*(v-0.5f)) + std::exp(5*(0.5f-v));
+
+    const float scaling = 2.0f;
+    const int octave = 4;
+    const float persistency = 0.5f;
+    float noise = perlin(scaling*std::cos(theta), scaling*v, scaling*std::sin(theta), octave, persistency);
+    //noise = (u>0.5f) ? -noise : noise;
+    
+    const float x = normalize(v);
+    const float y = (radius+noise)*std::cos(theta);
+    float z = (radius+noise)*std::sin(theta);
+
     return {x,y,z};
 }
 
 mesh create_canyon() {
-    const size_t N = 100;
+    const size_t N = 500;
     mesh canyon;
+    canyon.position.resize(N*(N+1));
 
     for(size_t ku=0; ku<N; ++ku)
     {
         for(size_t kv=0; kv<N; ++kv)
         {
             // Compute local parametric coordinates (u,v) \in [0,1]
-            const float u = ku/(N-1.0f);
+            const float theta = 2*3.14*ku/(N-1.0f);
             const float v = kv/(N-1.0f);
 
             // Compute coordinates
-            float c;
-            canyon.position[kv+N*ku] = gaussienne_canyon(u,v);
+            canyon.position[kv+N*ku] = gaussienne_canyon(theta,v);
         }
     }
+    for(size_t kv=0; kv<N; ++kv)
+        canyon.position[kv + N*N] = canyon.position[kv];
 
 
     // Generate triangle organization
     //  Parametric surface with uniform grid sampling: generate 2 triangles for each grid cell
     const unsigned int Ns = N;
-    for(unsigned int ku=0; ku<Ns-1; ++ku)
+    for(unsigned int ku=0; ku<Ns; ++ku)
     {
         for(unsigned int kv=0; kv<Ns-1; ++kv)
         {
@@ -119,6 +122,15 @@ mesh create_canyon() {
             canyon.connectivity.push_back(triangle_2);
         }
     }
+    /*
+    std::uniform_real_distribution<float> distrib(0.5,1.0);
+    std::default_random_engine generator;
 
+    for(int i = 0; i<10; i++) {
+        mesh_drawable patate = mesh_primitive_sphere(distrib(generator));
+        patate.uniform_parameter.translation = {i,2.0f,0.0f};
+        canyon.push_back(patate);
+    }
+*/
     return canyon;
 }
