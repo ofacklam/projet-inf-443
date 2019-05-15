@@ -28,6 +28,10 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     scene.camera.scale = 10.0f;
     scene.camera.apply_rotation(0,0,0,1.2f);
 
+
+    // Set up obstacle
+    o.setup();
+
 }
 
 
@@ -50,7 +54,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
         terrain.draw(shaders["wireframe"], scene.camera);
     }
 
-    //o.draw(shaders, scene, gui, vec3(), mat3());
+    o.draw(shaders, scene, gui, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);
 }
 
 void scene_exercise::set_gui()

@@ -7,7 +7,8 @@
 class obstacle {
 public: 
     obstacle();
-    void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui, vcl::vec3 position, vcl::mat3 rotation);
+    void setup();
+    void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui, vcl::vec3 position, vcl::mat3 rotation, vcl::vec3 scaling, bool wireframe=false);
 
 private:
     vcl::mesh_drawable object;
