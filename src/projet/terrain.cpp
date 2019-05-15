@@ -86,7 +86,39 @@ vec3 gaussienne_canyon(float u, float v) {
 
 mesh create_canyon() {
     const size_t N = 100;
-    //Cote gauche
+    mesh canyon;
 
-    //Cote droit
+    for(size_t ku=0; ku<N; ++ku)
+    {
+        for(size_t kv=0; kv<N; ++kv)
+        {
+            // Compute local parametric coordinates (u,v) \in [0,1]
+            const float u = ku/(N-1.0f);
+            const float v = kv/(N-1.0f);
+
+            // Compute coordinates
+            float c;
+            canyon.position[kv+N*ku] = gaussienne_canyon(u,v);
+        }
+    }
+
+
+    // Generate triangle organization
+    //  Parametric surface with uniform grid sampling: generate 2 triangles for each grid cell
+    const unsigned int Ns = N;
+    for(unsigned int ku=0; ku<Ns-1; ++ku)
+    {
+        for(unsigned int kv=0; kv<Ns-1; ++kv)
+        {
+            const unsigned int idx = kv + N*ku; // current vertex offset
+
+            const index3 triangle_1 = {idx, idx+1+Ns, idx+1};
+            const index3 triangle_2 = {idx, idx+Ns, idx+1+Ns};
+
+            canyon.connectivity.push_back(triangle_1);
+            canyon.connectivity.push_back(triangle_2);
+        }
+    }
+
+    return canyon;
 }
