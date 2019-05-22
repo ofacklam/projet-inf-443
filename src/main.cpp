@@ -136,9 +136,9 @@ void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    float move = 0.005f;
+    float increment = 0.05f;
     if (key == GLFW_KEY_LEFT)
-        scene.camera.apply_translation_in_screen_plane(move,0.0f);
+        exercise.move += increment;
     if (key == GLFW_KEY_RIGHT)
-        scene.camera.apply_translation_in_screen_plane(-move,0.0f);
+        exercise.move -= increment;
 }

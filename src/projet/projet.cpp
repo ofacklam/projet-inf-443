@@ -17,6 +17,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     scene.camera.apply_rotation(0,0,0,-1.5f);
     scene.camera.translation = {0.0f, 0.0f, 0.0f};
     theta = 0;
+    move = 0;
 
     //Set up level
     level.setup(new arbre(), new terrain());
@@ -29,9 +30,10 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
 {
     set_gui();
-
+    float move_ = move;
+    move = 0;
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
-
+    scene.camera.translation += vec3(move_,0,0);
     move_camera(scene);
     theta = theta + d_theta;
 
