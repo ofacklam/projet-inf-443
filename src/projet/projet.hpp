@@ -2,7 +2,9 @@
 
 #include "../base_exercise/base_exercise.hpp"
 #include "obstacle.hpp"
+#include "arbre.hpp"
 #include "terrain.hpp"
+#include "niveau.hpp"
 
 
 // Stores some parameters that can be set from the GUI
@@ -30,9 +32,8 @@ struct scene_exercise : base_scene_exercise
 
     void set_gui();
 
-    // visual representation of a surface
-    terrain t;
-    obstacle o;
+    // visual representation of a level
+    niveau level;
 
     gui_scene_structure gui_scene;
 };

@@ -16,11 +16,8 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     scene.camera.scale = 10.0f;
     scene.camera.apply_rotation(0,0,0,1.2f);
 
-    //Set up terrain
-    t.setup();
-
-    // Set up obstacle
-    o.setup();
+    //Set up level
+    level.setup(new arbre(), new terrain());
 
 }
 
@@ -33,9 +30,11 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
-    t.draw(shaders, scene, gui_scene.wireframe);
+    level.draw(shaders, scene, gui_scene.wireframe); 
+    
+    /*t.draw(shaders, scene, gui_scene.wireframe);
 
-    o.draw(shaders, scene, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);
+    o.draw(shaders, scene, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);*/
 }
 
 void scene_exercise::set_gui()

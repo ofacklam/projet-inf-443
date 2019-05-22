@@ -2,14 +2,14 @@
 
 #include <map>
 
-#include "../base_exercise/base_exercise.hpp"
+#include "obstacle.hpp"
 
-class obstacle {
+class arbre : public obstacle {
 public: 
-    obstacle();
+    arbre() {};
     virtual void setup();
     virtual void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vcl::vec3 position, vcl::mat3 rotation, vcl::vec3 scaling, bool wireframe=false);
 
 private:
-    vcl::mesh_drawable object;
+    vcl::mesh_drawable_hierarchy hierarchy;
 };
