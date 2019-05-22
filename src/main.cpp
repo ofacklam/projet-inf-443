@@ -35,6 +35,7 @@ scene_exercise exercise;
 void window_size_callback(GLFWwindow* /*window*/, int width, int height);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_click_callback(GLFWwindow* window, int button, int action, int mods);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 
 // ************************************** //
@@ -52,12 +53,14 @@ int main()
     initialize_interface(gui);
 
     // Set GLFW events listener
-    glfwSetCursorPosCallback(gui.window, cursor_position_callback );
-    glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
-    glfwSetWindowSizeCallback(gui.window, window_size_callback);
+    //glfwSetCursorPosCallback(gui.window, cursor_position_callback );
+    //glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
+    //glfwSetWindowSizeCallback(gui.window, window_size_callback);
+    glfwSetKeyCallback(gui.window, key_callback);
 
     load_shaders(shaders);
     setup_scene(scene, gui);
+
 
 
     opengl_debug();
@@ -130,4 +133,12 @@ void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
     ImGui::SetWindowFocus(nullptr);
     scene.camera_control.update_mouse_click(scene.camera, window, button, action, mods);
     exercise.mouse_click(scene, window,button,action,mods);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    float move = 0.005f;
+    if (key == GLFW_KEY_LEFT)
+        scene.camera.apply_translation_in_screen_plane(move,0.0f);
+    if (key == GLFW_KEY_RIGHT)
+        scene.camera.apply_translation_in_screen_plane(-move,0.0f);
 }

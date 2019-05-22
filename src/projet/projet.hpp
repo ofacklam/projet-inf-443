@@ -31,9 +31,13 @@ struct scene_exercise : base_scene_exercise
     void frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
 
     void set_gui();
+    void move_camera(scene_structure& scene);
 
     // visual representation of a level
     niveau level;
+
+    float theta; //Angle pour affichage de la camera et progression dans le niveau
+    const float d_theta = 0.01f;
 
     gui_scene_structure gui_scene;
 };
