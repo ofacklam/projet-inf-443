@@ -5,6 +5,7 @@
 #include "arbre.hpp"
 #include "terrain.hpp"
 #include "niveau.hpp"
+#include "joueur.hpp"
 
 
 // Stores some parameters that can be set from the GUI
@@ -35,9 +36,10 @@ struct scene_exercise : base_scene_exercise
 
     // visual representation of a level
     niveau level;
+    joueur player;
 
     float theta; //Angle pour affichage de la camera et progression dans le niveau
-    const float d_theta = 0.01f;
+    const float d_theta = 0.005f;
     float move; //Contient la translation avec les fleches
 
     gui_scene_structure gui_scene;

@@ -210,7 +210,7 @@ void arbre::setup() {
             to_treat.push(std::pair<int, int> (c, depth+1));
         }
     }
-
+    
 
 }
 
