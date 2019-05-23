@@ -13,6 +13,7 @@ class terrain {
     private:
         vcl::mesh_drawable terrain_;
         vcl::mesh_drawable canyon_;  
+        int texture_canyon;
 };
 
 float normalize(float u);

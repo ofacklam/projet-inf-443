@@ -9,14 +9,18 @@ void terrain::setup() {
     terrain_.uniform_parameter.color = {0.6f,0.85f,0.5f};
     terrain_.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
     canyon_.uniform_parameter.shading.specular = 0.0f;
+    texture_canyon = texture_gpu(image_load_png("data/maxresdefault.png"));
 }
 
 void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
     // Display terrain
     glPolygonOffset( 1.0, 1.0 );
     terrain_.draw(shaders["mesh"], scene.camera);
+    glBindTexture(GL_TEXTURE_2D, texture_canyon);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     canyon_.draw(shaders["mesh"], scene.camera);
-
+    glBindTexture(GL_TEXTURE_2D, scene.texture_white);
     if( wireframe ){ // wireframe if asked from the GUI
         glPolygonOffset( 1.0, 1.0 );
         terrain_.draw(shaders["wireframe"], scene.camera);

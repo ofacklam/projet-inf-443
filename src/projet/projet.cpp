@@ -33,7 +33,6 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     float move_ = move;
     move = 0;
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
-    scene.camera.translation += vec3(move_,0,0);
     move_camera(scene);
     theta = theta + d_theta;
 
