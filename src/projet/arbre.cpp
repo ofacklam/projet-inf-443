@@ -4,11 +4,7 @@
 using namespace vcl;
 
 void arbre::setup() {
-<<<<<<< HEAD
-    hierarchy = ternary::generate(6);
-=======
     hierarchy = monopodial::generate(6);
->>>>>>> 0d94b7850edb26abd927c65a1fb2f84bcc318b94
 }
 
 

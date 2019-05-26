@@ -22,17 +22,12 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     //Set up level
     level.setup(new arbre(), new terrain());
     player.setup();
-<<<<<<< HEAD
-    sky.setup("data/ely_hills/hills_ft.png","data/ely_hills/hills_bk.png","data/ely_hills/hills_lf.png","data/ely_hills/hills_rt.png","data/ely_hills/hills_up.png","data/ely_hills/hills_dn.png");
-
-=======
     sky.setup(  "data/ely_hills/hills_ft.png",
                 "data/ely_hills/hills_bk.png",
                 "data/ely_hills/hills_lf.png",
                 "data/ely_hills/hills_rt.png",
                 "data/ely_hills/hills_up.png",
                 "data/ely_hills/hills_dn.png");
->>>>>>> 0d94b7850edb26abd927c65a1fb2f84bcc318b94
 }
 
 
@@ -47,17 +42,12 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
     sky.draw(shaders, scene);
 
-<<<<<<< HEAD
     const float z = 10*std::cos(theta + 3.14f*0.4);
     const float y = 10*std::sin(theta + 3.14f*0.4);
     const float x = move;
     level.draw(shaders, scene, gui_scene.wireframe);
     vec3 pos_joueur = vec3(x,y,z);
     player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
-=======
-    level.draw(shaders, scene, gui_scene.wireframe);
-    //player.draw(shaders, scene, gui_scene.wireframe); 
->>>>>>> 0d94b7850edb26abd927c65a1fb2f84bcc318b94
     
     /*t.draw(shaders, scene, gui_scene.wireframe);
 

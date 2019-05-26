@@ -10,10 +10,6 @@ void Skybox::setup(string f, string b, string l, string r, string t, string bot)
     top = texture_gpu(image_load_png(t));
     bottom = texture_gpu(image_load_png(bot));
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0d94b7850edb26abd927c65a1fb2f84bcc318b94
     f_mesh = mesh_primitive_quad({-a, -a, a}, {-a, a, a}, {-a, a, -a}, {-a, -a, -a});
     f_mesh.uniform_parameter.shading = {1, 0, 0};
 
