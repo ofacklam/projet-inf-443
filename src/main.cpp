@@ -55,7 +55,7 @@ int main()
     // Set GLFW events listener
     //glfwSetCursorPosCallback(gui.window, cursor_position_callback );
     //glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
-    //glfwSetWindowSizeCallback(gui.window, window_size_callback);
+    glfwSetWindowSizeCallback(gui.window, window_size_callback);
     glfwSetKeyCallback(gui.window, key_callback);
 
     load_shaders(shaders);
