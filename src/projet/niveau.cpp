@@ -15,7 +15,7 @@ void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
     ter->draw(shaders, scene, wireframe);
 
     for(vec3 pos : obs_pos) {
-        obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1));
+        obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1), wireframe);
     }
 }
 

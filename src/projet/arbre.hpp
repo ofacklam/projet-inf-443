@@ -3,6 +3,7 @@
 #include <map>
 
 #include "obstacle.hpp"
+#include "l-systems/tree_gen.hpp"
 
 class arbre : public obstacle {
 public: 

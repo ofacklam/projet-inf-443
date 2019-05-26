@@ -136,9 +136,9 @@ void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    float increment = 0.05f;
+    float increment = 0.1f;
     if (key == GLFW_KEY_LEFT)
-        exercise.move += increment;
-    if (key == GLFW_KEY_RIGHT)
         exercise.move -= increment;
+    if (key == GLFW_KEY_RIGHT)
+        exercise.move += increment;
 }

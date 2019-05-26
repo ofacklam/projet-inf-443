@@ -1,20 +1,19 @@
 #include "joueur.hpp"
-#include "OBJ_Loader.h"
 
 using namespace vcl;
 
 
 void joueur::setup() {
-    objl::Loader loader;
-    loader.LoadFile("data/Dragon/Dragon/Dragon.obj");
-    mesh player_;
-    player_.position = loader.LoadedMeshes[0].Vertices;
-    player_.connectivity = loader.LoadedMeshes[0].Indices;
+    mesh player_ = mesh_load_file_obj("data/Dragon/Dragon/Dragon.obj");
+    player = player_;
+    player.uniform_parameter.scaling = 0.02f;
 }
 
-void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
+void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe, vec3 position, float angle) {
 
     glPolygonOffset( 1.0, 1.0 );
+    player.uniform_parameter.translation = position;
+    player.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},-(angle+0.2f))*rotation_from_axis_angle_mat3({0,1,0},3.14f);
     player.draw(shaders["mesh"], scene.camera);
 
     if(wireframe) {
