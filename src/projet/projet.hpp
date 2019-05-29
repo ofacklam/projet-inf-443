@@ -31,6 +31,7 @@ struct scene_exercise : base_scene_exercise
 
     void setup_data(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
     void frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
+    vcl::vec3 linear_interpolation(float t, float t1, float t2, const vcl::vec3& p1, const vcl::vec3& p2);
 
     void set_gui();
     void move_camera(scene_structure& scene);
@@ -40,9 +41,15 @@ struct scene_exercise : base_scene_exercise
     joueur player;
     Skybox sky;
 
+    float rayon;
     float theta; //Angle pour affichage de la camera et progression dans le niveau
     const float d_theta = 0.0005f;
     float move; //Contient la translation avec les fleches
+    vcl::vec3 pos_joueur;
+    
+    std::vector<vcl::vec3> keyframe_position; // Given positions
+    std::vector<float> keyframe_time;         // Time at given positions
+    vcl::timer_interval timer;
 
     gui_scene_structure gui_scene;
 };

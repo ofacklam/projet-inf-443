@@ -63,8 +63,8 @@ int main()
     initialize_interface(gui);
 
     // Set GLFW events listener
-    //glfwSetCursorPosCallback(gui.window, cursor_position_callback );
-    //glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
+    glfwSetCursorPosCallback(gui.window, cursor_position_callback );
+    glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
     glfwSetWindowSizeCallback(gui.window, window_size_callback);
     glfwSetKeyCallback(gui.window, key_callback);
 
@@ -204,7 +204,7 @@ void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    float increment = 0.1f;
+    float increment = 0.05f;
     if (key == GLFW_KEY_LEFT)
         exercise.move -= increment;
     if (key == GLFW_KEY_RIGHT)

@@ -10,15 +10,19 @@ void terrain::setup() {
     terrain_.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
     canyon_.uniform_parameter.shading.specular = 0.0f;
     texture_canyon = texture_gpu(image_load_png("data/maxresdefault.png"));
+    texture_sol = texture_gpu(image_load_png("data/grass.png"));
 }
 
 void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
     // Display terrain
     glPolygonOffset( 1.0, 1.0 );
+    glBindTexture(GL_TEXTURE_2D, texture_sol);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     terrain_.draw(shaders["mesh"], scene.camera);
     glBindTexture(GL_TEXTURE_2D, texture_canyon);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
     canyon_.draw(shaders["mesh"], scene.camera);
     glBindTexture(GL_TEXTURE_2D, scene.texture_white);
     if( wireframe ){ // wireframe if asked from the GUI
@@ -58,7 +62,7 @@ mesh create_terrain()
 
     mesh terrain; // temporary terrain storage (CPU only)
     terrain.position.resize(N*(N+1));
-
+    terrain.texture_uv.resize(N*(N+1));
     // Fill terrain geometry
     for(size_t ku=0; ku<N; ++ku)
     {
@@ -66,14 +70,18 @@ mesh create_terrain()
         {
             // Compute local parametric coordinates (u,v) \in [0,1]
             const float theta = 2*3.14*ku/(N-1.0f);
+            const float u = ku/(N-1.0f); 
             const float v = kv/(N-1.0f);
 
             // Compute coordinates
             terrain.position[kv+N*ku] = evaluate_terrain(theta,v);
+            terrain.texture_uv[kv+N*ku] = vec2(50*u,50*v);
         }
     }
-    for(size_t kv=0; kv<N; ++kv)
+    for(size_t kv=0; kv<N; ++kv) {
         terrain.position[kv + N*N] = terrain.position[kv];
+        terrain.texture_uv[kv + N*N] = terrain.texture_uv[kv];
+    }
 
 
     // Generate triangle organization
@@ -124,7 +132,6 @@ mesh create_canyon() {
         {
             // Compute local parametric coordinates (u,v) \in [0,1]
             const float u = ku/(N-1.0f);
-            const float tu = ku/((float)N);
             const float theta = 2*3.14*u;
             const float v = kv/(N-1.0f);
 
@@ -133,10 +140,6 @@ mesh create_canyon() {
             canyon.texture_uv[kv+N*ku] = vec2(50*u, 50*v);
         }
     }
-    /*for(size_t kv=0; kv<N; ++kv) {
-        canyon.position[kv + N*N] = canyon.position[kv];
-        canyon.texture_uv[kv+N*N] = canyon.texture_uv[kv];
-    }*/
 
 
     // Generate triangle organization

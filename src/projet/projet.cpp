@@ -14,10 +14,19 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     // Setup initial camera mode and position
     scene.camera.camera_type = camera_control_spherical_coordinates;
     scene.camera.scale = 1.0f;
-    //scene.camera.apply_rotation(0,0,0,1.8f);
     scene.camera.translation = {0.0f, 0.0f, 0.0f};
+
+
     theta = 0;
     move = 0;
+    pos_joueur = {move, r, 0};
+    keyframe_time = {0,1};
+
+    timer.t_min = keyframe_time[0];
+    timer.t_max = keyframe_time[1];
+    timer.t = timer.t_min;
+    timer.scale = 0.2f;
+    rayon = 51.0f;
 
     //Set up level
     level.setup(new arbre(), new terrain());
@@ -41,17 +50,17 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     theta = theta + d_theta;
 
     sky.draw(shaders, scene);
-
-    const float r = 51;
-    const float z = -r*std::sin(theta + 3.14f*0.02);
-    const float y = r*std::cos(theta + 3.14f*0.02);
-    const float x = move;
+    timer.update();
+    const float t = timer.t;
+    const float r = rayon + 0.1f*std::sin(2*3.14*t);
+    keyframe_position = {pos_joueur,{move, r*std::cos(theta + 3.14f*0.01),-r*std::sin(theta + 3.14f*0.01)}};
     level.draw(shaders, scene, gui_scene.wireframe);
-    vec3 pos_joueur = vec3(x,y,z);
+    pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
     player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
     
-    if(level.collision(pos_joueur, 1))
-        glfwSetWindowShouldClose(gui.window, 1);
+    /*t.draw(shaders, scene, gui_scene.wireframe);
+
+    o.draw(shaders, scene, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);*/
 }
 
 void scene_exercise::set_gui()
@@ -70,3 +79,9 @@ void scene_exercise::move_camera(scene_structure& scene) {
     
 }
 
+vec3 scene_exercise::linear_interpolation(float t, float t1, float t2, const vec3& p1, const vec3& p2) {
+    const float alpha = (t-t1)/(t2-t1);
+    const vec3 p = (1-alpha)*p1 + alpha*p2;
+
+    return p;
+}
