@@ -6,9 +6,11 @@ in struct fragment_data
     vec4 normal;
     vec4 color;
     vec2 texture_uv;
+    vec3 light_position;
 } fragment;
 
 uniform sampler2D texture_sampler;
+uniform sampler2D shadow_sampler;
 
 out vec4 FragColor;
 
@@ -18,7 +20,10 @@ uniform float ambiant  = 0.2;
 uniform float diffuse  = 0.8;
 uniform float specular = 0.5;
 
-vec3 light = 2*camera_position; 
+uniform vec3 light;
+//vec3 light = 10 * camera_position;
+
+float bias = 0.000001;
 
 void main()
 {
@@ -27,9 +32,12 @@ void main()
     vec3 r = reflect(u,n);
     vec3 t = normalize(fragment.position.xyz-camera_position);
 
+    float min_depth = texture(shadow_sampler, fragment.light_position.xy).r;
+    float depth = fragment.light_position.z;
+    float brightness = (depth <= min_depth+bias) ? 1.0f : 0.0f;
 
-    float diffuse_value  = diffuse * clamp( dot(u,n), 0.0, 1.0);
-    float specular_value = specular * pow( clamp( dot(r,t), 0.0, 1.0), 128.0);
+    float diffuse_value  = brightness * diffuse * clamp( dot(u,n), 0.0, 1.0);
+    float specular_value = brightness * specular * pow( clamp( dot(r,t), 0.0, 1.0), 128.0);
 
 
     vec3 white = vec3(1.0);

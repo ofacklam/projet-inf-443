@@ -7,7 +7,7 @@
 using std::string;
 
 class Skybox {
-    const float a = 20;
+    const float a = 200;
 
     GLuint front, back, left, right, top, bottom;
     vcl::mesh_drawable f_mesh;

@@ -36,7 +36,7 @@ void Skybox::bind(GLuint texture) {
 }
 
 void Skybox::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
-    mat3 R = rotation_from_axis_angle_mat3({-1, 0, 0}, 5*3.14/12) * scene.camera.orientation;
+    mat3 R = rotation_from_axis_angle_mat3({-1, 0, 0}, 3.14/2) * scene.camera.orientation;
 
     //Front 
     bind(front);

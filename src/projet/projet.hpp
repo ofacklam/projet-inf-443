@@ -41,7 +41,7 @@ struct scene_exercise : base_scene_exercise
     Skybox sky;
 
     float theta; //Angle pour affichage de la camera et progression dans le niveau
-    const float d_theta = 0.005f;
+    const float d_theta = 0.0005f;
     float move; //Contient la translation avec les fleches
 
     gui_scene_structure gui_scene;

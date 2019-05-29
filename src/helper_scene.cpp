@@ -10,10 +10,13 @@ GLFWwindow* create_window(const std::string& window_title)
 {
     const int opengl_version_major = 3;
     const int opengl_version_minor = 3;
-    const int window_width  = 2560;
-    const int window_height = 1440;
 
-    GLFWwindow* window = vcl::glfw_create_window(window_width, window_height, window_title, opengl_version_major, opengl_version_minor,glfwGetPrimaryMonitor());
+    const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    //glfwGetMonitorSize(glfwGetPrimaryMonitor(), &window_width, &window_height);
+    //const int window_width  = 2560;
+    //const int window_height = 1440;
+
+    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,nullptr);
     return window;
 }
 
@@ -52,6 +55,8 @@ void load_shaders(std::map<std::string,GLuint>& shaders)
     shaders["wireframe"] = create_shader_program("shaders/wireframe/shader.vert.glsl","shaders/wireframe/shader.geom.glsl","shaders/wireframe/shader.frag.glsl");
     shaders["curve"] = create_shader_program("shaders/curve/shader.vert.glsl","shaders/curve/shader.frag.glsl");
     shaders["segment_im"] = create_shader_program("shaders/segment_immediate_mode/shader.vert.glsl","shaders/segment_immediate_mode/shader.frag.glsl");
+    shaders["shadows"] = create_shader_program("shaders/shadow/shader.vert.glsl", "shaders/shadow/shader.frag.glsl");
+    shaders["debug"] = create_shader_program("shaders/debug/shader.vert.glsl", "shaders/debug/shader.frag.glsl");
 
     std::cout<<"\t [OK] Shader loaded"<<std::endl;
 }
@@ -67,7 +72,7 @@ void setup_scene(scene_structure &scene, gui_structure& gui)
     glfwGetWindowSize(gui.window, &width, &height);
     const float aspect_ratio = width/static_cast<float>(height);
 
-    scene.camera.perspective = perspective_structure( 40*3.14f/180, aspect_ratio, 0.01f, 500.0f);
+    scene.camera.perspective = perspective_structure( 70*3.14f/180, aspect_ratio, 0.01f, 500.0f);
 
     const image white{1,1,{255,255,255,255}};
     scene.texture_white = texture_gpu(white);

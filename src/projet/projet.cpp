@@ -13,7 +13,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 {
     // Setup initial camera mode and position
     scene.camera.camera_type = camera_control_spherical_coordinates;
-    scene.camera.scale = 10.0f;
+    scene.camera.scale = 1.0f;
     //scene.camera.apply_rotation(0,0,0,1.8f);
     scene.camera.translation = {0.0f, 0.0f, 0.0f};
     theta = 0;
@@ -42,8 +42,9 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
     sky.draw(shaders, scene);
 
-    const float z = 10*std::cos(theta + 3.14f*0.4);
-    const float y = 10*std::sin(theta + 3.14f*0.4);
+    const float r = 51;
+    const float z = -r*std::sin(theta + 3.14f*0.02);
+    const float y = r*std::cos(theta + 3.14f*0.02);
     const float x = move;
     level.draw(shaders, scene, gui_scene.wireframe);
     vec3 pos_joueur = vec3(x,y,z);
@@ -60,8 +61,9 @@ void scene_exercise::set_gui()
 }
 
 void scene_exercise::move_camera(scene_structure& scene) {
-    const float z0 = 11.0f*std::sin(theta);
-    const float y0 = -11.0f*std::cos(theta);
+    const float r = 51.0f;
+    const float z0 = r*std::sin(theta);
+    const float y0 = -r*std::cos(theta);
     const float x0 = scene.camera.translation[0];
 
     scene.camera.orientation = rotation_from_axis_angle_mat3({-1, 0, 0}, theta);

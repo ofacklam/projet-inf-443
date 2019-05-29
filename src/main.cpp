@@ -27,6 +27,11 @@ gui_structure gui;
 // Part specific data - you will specify this object in the corresponding exercise part
 scene_exercise exercise;
 
+// Frame buffer and depth map
+unsigned int depthMapFBO;
+uint depthMap;
+const unsigned int SHADOW_WIDTH = 10000, SHADOW_HEIGHT = 10000;
+
 
 // ************************************** //
 // GLFW event listeners
@@ -41,6 +46,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 // ************************************** //
 // Start program
 // ************************************** //
+
+void framebuffer_setup();
+void calculate_shadows();
+void render_scene();
+
 
 int main()
 {
@@ -61,7 +71,7 @@ int main()
     load_shaders(shaders);
     setup_scene(scene, gui);
 
-
+    framebuffer_setup();
 
     opengl_debug();
     std::cout<<"*** Setup Data ***"<<std::endl;
@@ -82,17 +92,12 @@ int main()
     {
         opengl_debug();
 
-        // Clear all color and zbuffer information before drawing on the screen
-        clear_screen();opengl_debug();
-        // Set a white image texture by default
-        glBindTexture(GL_TEXTURE_2D,scene.texture_white);
-
         // Create the basic gui structure with ImGui
         gui_start_basic_structure(gui,scene, shaders);
 
         // Perform computation and draw calls for each iteration loop
-        exercise.frame_draw(shaders, scene, gui); opengl_debug();
-
+        calculate_shadows();
+        render_scene();
 
         // Render GUI and update window
         ImGui::End();
@@ -115,6 +120,69 @@ int main()
     glfwTerminate();
 
     return 0;
+}
+
+void framebuffer_setup() {
+    //Create framebuffer to generate frame to
+    glGenFramebuffers(1, &depthMapFBO);
+
+    //Create depth map
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
+                SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
+
+    //Attach to frame_buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+}
+
+void calculate_shadows() {
+
+    // Render to depth map
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    // Clear all color and zbuffer information before drawing on the screen
+    clear_screen();opengl_debug();
+    glCullFace(GL_FRONT);
+
+    // Change shaders
+    GLuint mesh_shader = shaders["mesh"];
+    shaders["mesh"] = shaders["shadows"];
+    exercise.frame_draw(shaders, scene, gui); opengl_debug();
+    
+
+    //Reset everything
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // Set a white image texture by default
+    glBindTexture(GL_TEXTURE_2D,scene.texture_white);
+    // Set viewport to window size
+    int width, height;
+    glfwGetWindowSize(gui.window, &width, &height);
+    glViewport(0, 0, width, height);
+    glCullFace(GL_BACK);
+    // Shaders
+    shaders["mesh"] = mesh_shader;
+}
+
+void render_scene() {
+    // Clear all color and zbuffer information before drawing on the screen
+    clear_screen();opengl_debug();
+
+    //Bind texture
+    glActiveTexture(GL_TEXTURE1); //activate depth texture
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glActiveTexture(GL_TEXTURE0); //reactivate normal texture
+
+    //Render scene
+    exercise.frame_draw(shaders, scene, gui); opengl_debug();
 }
 
 void window_size_callback(GLFWwindow* /*window*/, int width, int height)

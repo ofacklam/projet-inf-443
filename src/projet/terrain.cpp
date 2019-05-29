@@ -38,10 +38,10 @@ float normalize(float x) {
 vec3 evaluate_terrain(float theta, float v)
 {
     // Evaluate Perlin noise
-    const float scaling = 2.0f;
+    const float scaling = 0.2f;
     const int octave = 4;
     const float persistency = 0.5f;
-    const float noise = perlin(scaling*std::cos(theta), scaling*v, scaling*std::sin(theta), octave, persistency);
+    const float noise = perlin(scaling*r*std::cos(theta), scaling*r*v, scaling*r*std::sin(theta), octave, persistency);
 
     const float x = normalize(v);
     const float y = (r+0.2*noise)*std::cos(theta);
@@ -54,7 +54,7 @@ vec3 evaluate_terrain(float theta, float v)
 mesh create_terrain()
 {
     // Number of samples of the terrain is N x N
-    const size_t N = 500;
+    const size_t N = 1000;
 
     mesh terrain; // temporary terrain storage (CPU only)
     terrain.position.resize(N*(N+1));
@@ -97,7 +97,7 @@ mesh create_terrain()
 }
 
 vec3 gaussienne_canyon(float theta, float v) {
-    const float radius = 4.0f + std::exp(5*(v-0.5f)) + std::exp(5*(0.5f-v));
+    const float radius = 44.0f + std::exp(5*(v-0.4f)) + std::exp(5*(0.6f-v));
 
     const float scaling = 2.0f;
     const int octave = 4;
@@ -116,21 +116,27 @@ mesh create_canyon() {
     const size_t N = 500;
     mesh canyon;
     canyon.position.resize(N*(N+1));
+    canyon.texture_uv.resize(N*(N+1));
 
-    for(size_t ku=0; ku<N; ++ku)
+    for(size_t ku=0; ku<(N+1); ++ku)
     {
         for(size_t kv=0; kv<N; ++kv)
         {
             // Compute local parametric coordinates (u,v) \in [0,1]
-            const float theta = 2*3.14*ku/(N-1.0f);
+            const float u = ku/(N-1.0f);
+            const float tu = ku/((float)N);
+            const float theta = 2*3.14*u;
             const float v = kv/(N-1.0f);
 
             // Compute coordinates
             canyon.position[kv+N*ku] = gaussienne_canyon(theta,v);
+            canyon.texture_uv[kv+N*ku] = vec2(50*u, 50*v);
         }
     }
-    for(size_t kv=0; kv<N; ++kv)
+    /*for(size_t kv=0; kv<N; ++kv) {
         canyon.position[kv + N*N] = canyon.position[kv];
+        canyon.texture_uv[kv+N*N] = canyon.texture_uv[kv];
+    }*/
 
 
     // Generate triangle organization

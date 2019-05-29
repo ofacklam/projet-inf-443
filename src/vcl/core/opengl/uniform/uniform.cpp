@@ -9,6 +9,11 @@ void uniform(GLuint shader, const std::string& name, float value)
     glUniform1f(location, value);
 }
 
+void uniform(GLuint shader, const std::string& name, int value) {
+    const GLint location = glGetUniformLocation(shader, name.c_str());
+    glUniform1i(location, value);
+}
+
 
 void uniform(GLuint shader, const std::string& name, const vec3& value)
 {

@@ -10,6 +10,7 @@ namespace vcl
 {
 
 void uniform(GLuint shader, const std::string& name, const float value);
+void uniform(GLuint shader, const std::string& name, const int value);
 void uniform(GLuint shader, const std::string& name, const vec3& value);
 void uniform(GLuint shader, const std::string& name, const vec4& value);
 void uniform(GLuint shader, const std::string& name, float x, float y, float z);

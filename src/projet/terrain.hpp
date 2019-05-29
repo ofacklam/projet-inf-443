@@ -23,4 +23,4 @@ vcl::mesh create_terrain();
 vcl::vec3 gaussienne_canyon(float u, float v);
 vcl::mesh create_canyon();
 
-const float r = 9.0f;
+const float r = 50.0f;
