@@ -54,7 +54,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     const float t = timer.t;
     const float r = rayon + 0.1f*std::sin(2*3.14*t);
     keyframe_position = {pos_joueur,{move, r*std::cos(theta + 3.14f*0.01),-r*std::sin(theta + 3.14f*0.01)}};
-    level.draw(shaders, scene, gui_scene.wireframe);
+    level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
     pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
     player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
     

@@ -11,11 +11,13 @@ void niveau::setup(obstacle* o, terrain *t) {
     generate_positions(50, obs_pos, 3, 0);
 }
 
-void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
+void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vec3 pos_joueur, bool wireframe) {
     ter->draw(shaders, scene, wireframe);
 
+
     for(vec3 pos : obs_pos) {
-        obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1), wireframe);
+        if(norm(pos-pos_joueur) < 20)
+            obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1), wireframe);
     }
 }
 

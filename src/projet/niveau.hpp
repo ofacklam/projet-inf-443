@@ -8,7 +8,7 @@ class niveau {
     public:
         niveau() {}
         void setup(obstacle *o, terrain *t);
-        void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe=false);
+        void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vcl::vec3 pos_joueur, bool wireframe=false);
         bool collision(vcl::vec3 player_pos, float dist);
 
     private:
