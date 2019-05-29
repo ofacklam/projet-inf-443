@@ -5,7 +5,7 @@ using namespace vcl;
 
 void arbre::setup() {
     hierarchy = monopodial::generate(5);
-    hierarchy.scaling = 0.2;
+    hierarchy.scaling = 0.5;
 }
 
 

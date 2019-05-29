@@ -8,7 +8,7 @@ void niveau::setup(obstacle* o, terrain *t) {
     ter->setup();
     obs->setup();
 
-    generate_positions(10, obs_pos, 3, 0);
+    generate_positions(50, obs_pos, 3, 0);
 }
 
 void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
@@ -17,6 +17,14 @@ void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
     for(vec3 pos : obs_pos) {
         obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1), wireframe);
     }
+}
+
+bool niveau::collision(vec3 player_pos, float dist) {
+    for(vec3 pos : obs_pos) {
+        if(norm(player_pos - pos) < dist)
+            return true;
+    }
+    return false;
 }
 
 

@@ -50,9 +50,8 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     vec3 pos_joueur = vec3(x,y,z);
     player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
     
-    /*t.draw(shaders, scene, gui_scene.wireframe);
-
-    o.draw(shaders, scene, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);*/
+    if(level.collision(pos_joueur, 1))
+        glfwSetWindowShouldClose(gui.window, 1);
 }
 
 void scene_exercise::set_gui()
