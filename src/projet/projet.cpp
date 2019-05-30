@@ -89,7 +89,7 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x));
 
-        end_game = level.collision(pos_joueur, 0.8f);
+        end_game = level.collision(pos_joueur, 1);
     }
     else {
         timer.t = 0;
@@ -113,7 +113,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x));
 
-        end_game = level.collision(pos_joueur, 1);
+        //end_game = level.collision(pos_joueur, 1);
     }
     else {
         lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({-1,0,0},theta);
