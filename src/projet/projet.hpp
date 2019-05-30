@@ -51,6 +51,8 @@ struct scene_exercise : base_scene_exercise
     std::vector<float> keyframe_time;         // Time at given positions
     vcl::timer_interval timer;
 
+    bool end_game = false;
+
     gui_scene_structure gui_scene;
 };
 

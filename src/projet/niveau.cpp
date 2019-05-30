@@ -22,6 +22,15 @@ void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
 }
 
 bool niveau::collision(vec3 player_pos, float dist) {
+    //Collision with terrain
+    float terrain_left = evaluate_terrain(0, 0.3).x;
+    float terrain_right = evaluate_terrain(0, 0.7).x;
+
+    if(player_pos.x < terrain_left || player_pos.x > terrain_right)
+        return true;
+
+
+    //Collision with obstacles 
     for(vec3 pos : obs_pos) {
         if(norm(player_pos - pos) < dist)
             return true;

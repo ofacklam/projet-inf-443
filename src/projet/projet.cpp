@@ -46,21 +46,30 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 {
     set_gui();
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
-    move_camera(scene);
-    theta = theta + d_theta;
 
-    sky.draw(shaders, scene);
-    timer.update();
-    const float t = timer.t;
-    const float r = rayon + 0.1f*std::sin(2*3.14*t);
-    keyframe_position = {pos_joueur,{move, r*std::cos(theta + 3.14f*0.01),-r*std::sin(theta + 3.14f*0.01)}};
-    level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
-    pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
-    player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
-    
-    /*t.draw(shaders, scene, gui_scene.wireframe);
+    if(!end_game) {
+        move_camera(scene);
+        theta = theta + d_theta;
 
-    o.draw(shaders, scene, vec3(), mat3(), vec3(1, 1, 1), gui_scene.wireframe);*/
+        sky.draw(shaders, scene);
+        timer.update();
+        const float t = timer.t;
+        const float r = rayon + 0.1f*std::sin(2*3.14*t);
+        keyframe_position = {pos_joueur,{move, r*std::cos(theta + 3.14f*0.01),-r*std::sin(theta + 3.14f*0.01)}};
+        level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
+        pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta); 
+        
+        /*mesh_drawable test = mesh_primitive_parallelepiped();
+        test.uniform_parameter.translation = gaussienne_canyon(-theta, 0.15);
+        test.uniform_parameter.scaling = 2;
+        test.draw(shaders["mesh"], scene.camera);*/
+
+        //end_game = level.collision(pos_joueur, 1);
+    }
+    else {
+        //glfwSetWindowShouldClose(gui.window, 1);
+    }
 }
 
 void scene_exercise::set_gui()
