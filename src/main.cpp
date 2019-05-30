@@ -30,7 +30,7 @@ scene_exercise exercise;
 // Frame buffer and depth map
 unsigned int depthMapFBO;
 uint depthMap;
-const unsigned int SHADOW_WIDTH = 10000, SHADOW_HEIGHT = 10000;
+const unsigned int SHADOW_WIDTH = 5000, SHADOW_HEIGHT = 5000;
 
 
 // ************************************** //
@@ -129,14 +129,15 @@ int main()
         calculate_shadows();
         render_scene();
 
-        /*// render Depth map to quad for visual debugging
+        // render Depth map to quad for visual debugging
         // ---------------------------------------------
-        clear_screen();opengl_debug();
+        /*clear_screen();opengl_debug();
         glUseProgram(shaders["debug"]);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, depthMap);
         glUniform1i(glGetUniformLocation(shaders["debug"], "depthMap"), 0);
         renderQuad();*/
+        
 
         // Render GUI and update window
         ImGui::End();

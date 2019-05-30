@@ -36,14 +36,10 @@ void mesh_drawable::draw(GLuint shader, const camera_scene& camera)
     uniform(shader,"perspective",camera.perspective.matrix()); opengl_debug();
     uniform(shader,"view",camera.view_matrix()); opengl_debug();
     uniform(shader,"camera_position",camera.camera_position()); opengl_debug();
-
-    camera_scene light_cam(camera);
-    light_cam.translation = 2 * camera.translation + vec3(30, 0, 0);
-    light_cam.orientation = rotation_from_axis_angle_mat3({0, 0, 1}, 3.14/6) * rotation_from_axis_angle_mat3({1, 0, 0}, -3.14/2) * camera.orientation;
-    light_cam.perspective = perspective_structure(70 * 3.14 / 180, 1, 0.1, 100);
-    uniform(shader,"light_perspective",light_cam.perspective.matrix()); opengl_debug();
-    uniform(shader,"light_view",light_cam.view_matrix()); opengl_debug();
-    uniform(shader,"light",light_cam.camera_position()); opengl_debug();
+    
+    uniform(shader,"light_perspective",camera.light_perspective.matrix()); opengl_debug();
+    uniform(shader,"light_view",camera.light_matrix()); opengl_debug();
+    uniform(shader,"light",camera.light_position()); opengl_debug();
 
     //Set up textures
     uniform(shader, "texture_sampler", 0);

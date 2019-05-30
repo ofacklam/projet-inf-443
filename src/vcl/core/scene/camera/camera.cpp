@@ -61,6 +61,19 @@ mat4 camera_scene::view_matrix() const
 
 }
 
+mat4 camera_scene::light_matrix() const
+{
+    mat3 R = transpose(light_orientation);
+    vec3 T = vec3{0,0,-scale} + R*light_translation;
+
+    return    { R(0,0), R(0,1), R(0,2), T.x,
+                R(1,0), R(1,1), R(1,2), T.y,
+                R(2,0), R(2,1), R(2,2), T.z,
+                0  ,    0  ,   0   ,  1 };
+
+}
+
+
 mat4 camera_scene::camera_matrix() const
 {
     mat3 R = orientation;
@@ -166,6 +179,11 @@ void camera_scene::apply_scaling(float s)
 vec3 camera_scene::camera_position() const
 {
     return orientation*vec3{0,0,scale} - translation;;
+}
+
+vec3 camera_scene::light_position() const
+{
+    return light_orientation*vec3{0,0,scale} - light_translation;;
 }
 
 }
