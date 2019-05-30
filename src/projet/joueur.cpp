@@ -14,7 +14,8 @@ void joueur::setup() {
     player.add_element(ag1,"ag1","corps",{3.5,-0.5,-10});
     player.add_element(ad1,"ad1","corps",{-3,-0.5,-10});
     player.scaling = 0.02f;
-    timer.scale = 0.5f;
+    timer.t_max = 5.0f; 
+    timer.scale = 1.0f;
 
     srand(time(NULL));
     char c = '1' + rand()%3;
@@ -38,11 +39,10 @@ void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
     player.rotation("ad1") = rotation_from_axis_angle_mat3({0,0,-1}, aile);
     player.rotation("tete") = rotation_from_axis_angle_mat3({1,0,0}, 0.25*aile);
     
-    
-    glBindTexture(GL_TEXTURE_2D,texture_dragon);
-    player.draw(shaders["mesh"], scene.camera);
-
-    if(wireframe) {
+    if(!wireframe) {
+        glBindTexture(GL_TEXTURE_2D,texture_dragon);
+        player.draw(shaders["mesh"], scene.camera);
+    } else {
         glPolygonOffset( 1.0, 1.0 );
         player.draw(shaders["wireframe"], scene.camera);
     }

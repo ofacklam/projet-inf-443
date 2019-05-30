@@ -13,7 +13,8 @@ void arbre::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, 
     hierarchy.rotation("0") = rotation;
     hierarchy.translation("0") = position;
 
-    hierarchy.draw(shaders["mesh"], scene.camera);
+    if(!wireframe)
+        hierarchy.draw(shaders["mesh"], scene.camera);
 
     if(wireframe)
         hierarchy.draw(shaders["wireframe"], scene.camera);

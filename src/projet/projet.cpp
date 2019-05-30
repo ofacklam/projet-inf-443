@@ -18,6 +18,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 
 
     theta = 0;
+    v_theta  = 0.5f;
     move = 0;
     pos_joueur = {move, r, 0};
 
@@ -33,7 +34,12 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
                 "data/ely_hills/hills_rt.png",
                 "data/ely_hills/hills_up.png",
                 "data/ely_hills/hills_dn.png");
-
+    sky_wireframe.setup(  "data/ame_nebula/purplenebula_ft.png",
+                "data/ame_nebula/purplenebula_bk.png",
+                "data/ame_nebula/purplenebula_lf.png",
+                "data/ame_nebula/purplenebula_rt.png",
+                "data/ame_nebula/purplenebula_up.png",
+                "data/ame_nebula/purplenebula_dn.png");
     texture_lost = texture_gpu(image_load_png("data/lost.png"));
     lost = mesh_primitive_quad({-1,1,0},{1,1,0},{1,-1,0},{-1,-1,0});
 }
@@ -43,11 +49,16 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     It is used to compute time-varying argument and perform data data drawing */
 void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
 {
-    set_gui();
+    //set_gui();
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
     float dt = timer.update();
     float d_theta = v_theta * dt;
+    if(theta > 2*3.14) {
+        gui_scene.wireframe = !gui_scene.wireframe;
+        v_theta += 0.05f;
+        theta -= 2*3.14;
+    }
 
     if(!end_game) {
         
@@ -56,16 +67,14 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         
         theta += d_theta;
 
-        sky.draw(shaders, scene);
-
         if(left) move -= vitesse * dt;
         if(right) move += vitesse * dt;
 
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
         float x = move;
-        float y = rayon*std::cos(theta -d_theta+ 3.14f*0.01);
-        float z = -rayon*std::sin(theta -d_theta+ 3.14f*0.01);
+        float y = 0.995*rayon*std::cos(theta -d_theta+ 3.14f*0.01);
+        float z = -0.995*rayon*std::sin(theta -d_theta+ 3.14f*0.01);
 
         old_pos = pos_joueur;
 
@@ -73,16 +82,12 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, old_pos); 
 
-        //end_game = level.collision(pos_joueur, 1);
+        end_game = level.collision(pos_joueur, 0.8);
     }
     else {
-        lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},theta+d_theta);
-        lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
-        glBindTexture(GL_TEXTURE_2D, texture_lost);
-        lost.draw(shaders["mesh"], scene.camera);
-        //timer.t = 0;
-        //while(timer.t < 0.8) timer.update();
-        //glfwSetWindowShouldClose(gui.window, 1);
+        timer.t = 0;
+        while(timer.t < 0.8) timer.update();
+        glfwSetWindowShouldClose(gui.window, 1);
     }
 }
 
@@ -91,7 +96,8 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
     if(!end_game) {
-        sky.draw(shaders, scene);
+        if(!gui_scene.wireframe) sky.draw(shaders, scene);
+        if(gui_scene.wireframe)  sky_wireframe.draw(shaders,scene);
 
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
@@ -100,7 +106,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
         //end_game = level.collision(pos_joueur, 1);
     }
     else {
-        lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},theta);
+        lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({-1,0,0},theta);
         lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
         glBindTexture(GL_TEXTURE_2D, texture_lost);
         lost.draw(shaders["mesh"], scene.camera);

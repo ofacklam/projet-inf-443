@@ -16,10 +16,10 @@ void obstacle::draw(std::map<std::string,GLuint>& shaders, scene_structure& scen
     object.uniform_parameter.scaling_axis = scaling;
 
     glPolygonOffset( 1.0, 1.0 );
-    object.draw(shaders["mesh"], scene.camera);
+    if(!wireframe)
+        object.draw(shaders["mesh"], scene.camera);
 
     if(wireframe) {
-        glPolygonOffset( 1.0, 1.0 );
         object.draw(shaders["wireframe"], scene.camera);
     }
 }

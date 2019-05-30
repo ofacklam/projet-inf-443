@@ -43,7 +43,7 @@ void generate_positions(uint N, std::vector<vcl::vec3> &arr, float min_dist, flo
 {
 
     std::uniform_real_distribution<float> dist_1(0.35, 0.65);
-    std::uniform_real_distribution<float> dist_2pi(0.05, 2*3.14-0.05);
+    std::uniform_real_distribution<float> dist_2pi(0.5, 2*3.14-0.5);
     std::random_device rd;
     std::default_random_engine gen(rd());
 

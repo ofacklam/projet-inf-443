@@ -40,11 +40,11 @@ struct scene_exercise : base_scene_exercise
     // visual representation of a level
     niveau level;
     joueur player;
-    Skybox sky;
+    Skybox sky, sky_wireframe;
 
     float rayon;
     float theta; //Angle pour affichage de la camera et progression dans le niveau
-    const float v_theta = 0.5f;
+    float v_theta;
     float move; //Contient la translation avec les fleches
     const float vitesse = 5.0f;
     bool left;

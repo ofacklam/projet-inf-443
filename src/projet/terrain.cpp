@@ -16,16 +16,17 @@ void terrain::setup() {
 void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
     // Display terrain
     glPolygonOffset( 1.0, 1.0 );
-    glBindTexture(GL_TEXTURE_2D, texture_sol);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    terrain_.draw(shaders["mesh"], scene.camera);
-    glBindTexture(GL_TEXTURE_2D, texture_canyon);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    canyon_.draw(shaders["mesh"], scene.camera);
-    glBindTexture(GL_TEXTURE_2D, scene.texture_white);
-    if( wireframe ){ // wireframe if asked from the GUI
+    if(!wireframe){
+        glBindTexture(GL_TEXTURE_2D, texture_sol);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        terrain_.draw(shaders["mesh"], scene.camera);
+        glBindTexture(GL_TEXTURE_2D, texture_canyon);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        canyon_.draw(shaders["mesh"], scene.camera);
+        glBindTexture(GL_TEXTURE_2D, scene.texture_white);
+    } else { // wireframe if asked from the GUI
         glPolygonOffset( 1.0, 1.0 );
         terrain_.draw(shaders["wireframe"], scene.camera);
         canyon_.draw(shaders["wireframe"], scene.camera);
