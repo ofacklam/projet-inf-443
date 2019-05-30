@@ -39,6 +39,7 @@ struct scene_exercise : base_scene_exercise
     // visual representation of a level
     niveau level;
     joueur player;
+    int text;
     Skybox sky, sky_wireframe;
 
     float rayon;

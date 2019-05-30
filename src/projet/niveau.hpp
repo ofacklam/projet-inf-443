@@ -9,10 +9,12 @@ class niveau {
         niveau() {}
         template<class T>
         void setup(terrain *t, int difficulte) {
-            obs = new T();
+            for(int i = 0; i<nb_obstacle_differents; i++) {
+                obs.push_back(new T());
+                obs[i]->setup();
+            }
             ter = t;
             ter->setup();
-            obs->setup();
 
             generate_positions(difficulte, 3, 0);
         }
@@ -22,9 +24,10 @@ class niveau {
         void generate_positions(uint N, float min_dist = 3, float z_off = 0);
 
     private:
-        obstacle *obs;
+        std::vector<obstacle*> obs;
         terrain *ter;
-        //skybox *sky;
+        const int nb_obstacle_differents = 10;
 
         std::vector<vcl::vec3> obs_pos;
+        std::vector<int> obs_type;
 };

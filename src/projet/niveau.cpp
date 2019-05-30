@@ -6,11 +6,12 @@ using namespace vcl;
 
 void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vec3 pos_joueur, bool wireframe) {
     ter->draw(shaders, scene, wireframe);
+    srand(time(NULL));
 
-
-    for(vec3 pos : obs_pos) {
-        if(norm(pos-pos_joueur) < 20)
-            obs->draw(shaders, scene, pos, rotation_between_vector_mat3({0, 0, 1}, {0, pos.y, pos.z}), vec3(1, 1, 1), wireframe);
+    for(int i = 0; i < obs_pos.size();i++) {
+        if(norm(obs_pos[i]-pos_joueur) < 20) {
+            obs[obs_type[i]]->draw(shaders, scene, obs_pos[i], rotation_between_vector_mat3({0, 0, 1}, {0, obs_pos[i].y, obs_pos[i].z}), vec3(1, 1, 1), wireframe);
+        }
     }
 }
 
@@ -40,7 +41,9 @@ void niveau::generate_positions(uint N, float min_dist, float z_off)
     std::random_device rd;
     std::default_random_engine gen(rd());
     obs_pos.clear();
+    obs_type.clear();
 
+    int count = 0;
     for(uint k = 0; k < N; k++) {
         float theta = dist_2pi(gen);
         float v = dist_1(gen);
@@ -55,9 +58,13 @@ void niveau::generate_positions(uint N, float min_dist, float z_off)
             }
         }
 
-        if(too_close)
-            k--;
-        else
+        if(too_close) {
+            k--; count ++;
+        } else {
             obs_pos.push_back(pos + vec3(0, z_off*std::cos(theta), z_off*std::sin(theta)));
+            obs_type.push_back(rand()%nb_obstacle_differents);
+        }
+        if (count  == 150)
+            break;
     }
 }
