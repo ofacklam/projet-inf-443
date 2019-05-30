@@ -37,6 +37,9 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
                 "data/ely_hills/hills_rt.png",
                 "data/ely_hills/hills_up.png",
                 "data/ely_hills/hills_dn.png");
+
+    texture_lost = texture_gpu(image_load_png("data/lost.png"));
+    lost = mesh_primitive_quad({-1,1,0},{1,1,0},{1,-1,0},{-1,-1,0});
 }
 
 
@@ -54,7 +57,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
         sky.draw(shaders, scene);
         timer.update();
         const float t = timer.t;
-        keyframe_position = {pos_joueur,{move, rayon*std::cos(theta + 3.14f*0.01),-rayon*std::sin(theta + 3.14f*0.01)}};
+        keyframe_position = {pos_joueur,{move, rayon*std::cos(theta -d_theta+ 3.14f*0.01),-rayon*std::sin(theta -d_theta+ 3.14f*0.01)}};
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
         pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, keyframe_position[1]); 
@@ -67,7 +70,13 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
         end_game = level.collision(pos_joueur, 1);
     }
     else {
-        glfwSetWindowShouldClose(gui.window, 1);
+        lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},theta+d_theta);
+        lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
+        glBindTexture(GL_TEXTURE_2D, texture_lost);
+        lost.draw(shaders["mesh"], scene.camera);
+        //timer.t = 0;
+        //while(timer.t < 0.8) timer.update();
+        //glfwSetWindowShouldClose(gui.window, 1);
     }
 }
 

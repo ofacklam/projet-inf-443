@@ -52,6 +52,8 @@ struct scene_exercise : base_scene_exercise
     vcl::timer_interval timer;
 
     bool end_game = false;
+    vcl::mesh_drawable lost;
+    int texture_lost;
 
     gui_scene_structure gui_scene;
 };
