@@ -25,14 +25,13 @@ void joueur::setup() {
     texture_dragon = texture_gpu(image_load_png(texture));
 }
 
-void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe, vec3 position, float angle, vcl::vec3 position_prev) {
+void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe, vec3 position, float angle, float rot_lateral) {
     timer.update();
     const float t = timer.t;
 
-    float rot_lateral = (position.x - position_prev.x);
     glPolygonOffset( 1.0, 1.0 );
     player.translation("corps") = position;
-    player.rotation("corps") = rotation_from_axis_angle_mat3({1,0,0},-(angle+0.2f))*rotation_from_axis_angle_mat3({0,1,0},3.14f)*rotation_from_axis_angle_mat3({0,0,1}, 50*rot_lateral);
+    player.rotation("corps") = rotation_from_axis_angle_mat3({1,0,0},-(angle+0.2f))*rotation_from_axis_angle_mat3({0,1,0},3.14f)*rotation_from_axis_angle_mat3({0,0,1}, rot_lateral);
     
     const float aile = std::sin(2*3.14f*(t-0.4f));
     player.rotation("ag1") = rotation_from_axis_angle_mat3({0,0,1}, aile);

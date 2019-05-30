@@ -80,7 +80,7 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
 
         const float alpha = 0.05;
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, old_pos); 
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x)); 
 
         end_game = level.collision(pos_joueur, 0.8);
     }
@@ -101,7 +101,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, old_pos); 
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x)); 
 
         //end_game = level.collision(pos_joueur, 1);
     }
