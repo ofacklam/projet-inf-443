@@ -2,13 +2,13 @@
 
 using namespace vcl;
 
-void niveau::setup(obstacle* o, terrain *t) {
+void niveau::setup(obstacle* o, terrain *t, int difficulte) {
     obs = o;
     ter = t;
     ter->setup();
     obs->setup();
 
-    generate_positions(50, obs_pos, 3, 0);
+    generate_positions(difficulte, obs_pos, 3, 0);
 }
 
 void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vec3 pos_joueur, bool wireframe) {

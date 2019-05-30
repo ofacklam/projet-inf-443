@@ -26,7 +26,9 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     rayon = 51.0f;
 
     //Set up level
-    level.setup(new arbre(), new terrain());
+    nb_obstacles = 50;
+
+    level.setup(new arbre(), new terrain(), nb_obstacles);
     player.setup();
     sky.setup(  "data/ely_hills/hills_ft.png",
                 "data/ely_hills/hills_bk.png",
@@ -42,6 +44,10 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
                 "data/ame_nebula/purplenebula_dn.png");
     texture_lost = texture_gpu(image_load_png("data/lost.png"));
     lost = mesh_primitive_quad({-1,1,0},{1,1,0},{1,-1,0},{-1,-1,0});
+    lvlup = mesh_primitive_quad({-8,rayon+7,0},{8,rayon+7,0},{8,rayon-2,0},{-8,rayon-2,0});
+    lvlup.uniform_parameter.shading.specular = 0.0f;
+    lvlup.uniform_parameter.shading.ambiant = 1.0f;
+    texture_lvlup = texture_gpu(image_load_png("data/lvlup.png"));
 }
 
 
@@ -49,7 +55,6 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     It is used to compute time-varying argument and perform data data drawing */
 void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
 {
-    //set_gui();
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
     float dt = timer.update();
@@ -58,6 +63,8 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         gui_scene.wireframe = !gui_scene.wireframe;
         v_theta += 0.05f;
         theta -= 2*3.14;
+        nb_obstacles += 5;
+        level.setup(new arbre(), new terrain(), nb_obstacles);
     }
 
     if(!end_game) {
@@ -73,16 +80,16 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
         float x = move;
-        float y = 0.995*rayon*std::cos(theta -d_theta+ 3.14f*0.01);
-        float z = -0.995*rayon*std::sin(theta -d_theta+ 3.14f*0.01);
+        float y =  rayon*std::cos(theta -d_theta+ 3.14f*0.01);
+        float z = -rayon*std::sin(theta -d_theta+ 3.14f*0.01);
 
         old_pos = pos_joueur;
 
         const float alpha = 0.05;
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x)); 
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x));
 
-        end_game = level.collision(pos_joueur, 0.8);
+        end_game = level.collision(pos_joueur, 0.8f);
     }
     else {
         timer.t = 0;
@@ -95,31 +102,27 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 {
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
+    glBindTexture(GL_TEXTURE_2D, texture_lvlup);
+    lvlup.draw(shaders["mesh"], scene.camera);
+
     if(!end_game) {
         if(!gui_scene.wireframe) sky.draw(shaders, scene);
         if(gui_scene.wireframe)  sky_wireframe.draw(shaders,scene);
 
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x)); 
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x));
 
-        //end_game = level.collision(pos_joueur, 1);
+        end_game = level.collision(pos_joueur, 1);
     }
     else {
         lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({-1,0,0},theta);
         lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
         glBindTexture(GL_TEXTURE_2D, texture_lost);
         lost.draw(shaders["mesh"], scene.camera);
-        //timer.t = 0;
-        //while(timer.t < 0.8) timer.update();
-        //glfwSetWindowShouldClose(gui.window, 1);
     }
 }
 
-void scene_exercise::set_gui()
-{
-    ImGui::Checkbox("Wireframe", &gui_scene.wireframe);
-}
 
 void scene_exercise::move_camera(scene_structure& scene) {
     const float retard = 0.25f;

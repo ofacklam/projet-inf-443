@@ -34,7 +34,6 @@ struct scene_exercise : base_scene_exercise
     void frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
     vcl::vec3 linear_interpolation(float t, float t1, float t2, const vcl::vec3& p1, const vcl::vec3& p2);
 
-    void set_gui();
     void move_camera(scene_structure& scene);
 
     // visual representation of a level
@@ -49,6 +48,7 @@ struct scene_exercise : base_scene_exercise
     const float vitesse = 5.0f;
     bool left;
     bool right;
+    int nb_obstacles = 50;
 
     vcl::vec3 pos_joueur;
     vcl::vec3 old_pos;
@@ -58,6 +58,9 @@ struct scene_exercise : base_scene_exercise
     bool end_game = false;
     vcl::mesh_drawable lost;
     int texture_lost;
+
+    vcl::mesh_drawable lvlup;
+    int texture_lvlup; 
 
     gui_scene_structure gui_scene;
 };
