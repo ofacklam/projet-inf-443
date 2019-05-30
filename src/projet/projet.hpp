@@ -49,7 +49,9 @@ struct scene_exercise : base_scene_exercise
     const float vitesse = 5.0f;
     bool left;
     bool right;
+
     vcl::vec3 pos_joueur;
+    vcl::vec3 old_pos;
     
     vcl::timer_basic timer;
 

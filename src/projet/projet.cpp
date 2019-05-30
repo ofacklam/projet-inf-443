@@ -41,7 +41,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 
 /** This function is called at each frame of the animation loop.
     It is used to compute time-varying argument and perform data data drawing */
-void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
+void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
 {
     set_gui();
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
@@ -67,7 +67,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
         float y = rayon*std::cos(theta -d_theta+ 3.14f*0.01);
         float z = -rayon*std::sin(theta -d_theta+ 3.14f*0.01);
 
-        vec3 old_pos = pos_joueur;
+        old_pos = pos_joueur;
 
         const float alpha = 0.05;
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
@@ -86,7 +86,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     }
 }
 
-void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
+void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
 {
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
@@ -95,11 +95,7 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
 
         level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
-        float x = move;
-        float y = rayon*std::cos(theta);
-        float z = -rayon*std::sin(theta);
-
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, {x, y, z}); 
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, old_pos); 
 
         //end_game = level.collision(pos_joueur, 1);
     }
