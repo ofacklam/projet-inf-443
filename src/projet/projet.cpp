@@ -78,12 +78,19 @@ void scene_exercise::set_gui()
 
 void scene_exercise::move_camera(scene_structure& scene) {
     const float r = 51.0f;
+
     const float z0 = r*std::sin(theta);
+    const float zl = 1.5*r*std::sin(theta-500*d_theta);
+
     const float y0 = -r*std::cos(theta);
+    const float yl = -1.5*r*std::cos(theta-500*d_theta);
+
     const float x0 = scene.camera.translation[0];
 
     scene.camera.orientation = rotation_from_axis_angle_mat3({-1, 0, 0}, theta);
+    scene.camera.light_orientation = rotation_from_axis_angle_mat3({-1, 0, 0}, theta + 3.14/2 - 3.14/3);// * rotation_from_axis_angle_mat3({0, 1, 0}, -3.14/6);
     scene.camera.translation = vec3(x0, y0, z0);
+    scene.camera.light_translation = vec3(x0, yl, zl); //+ vec3(30, 0, 0);
     
 }
 

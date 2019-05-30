@@ -35,14 +35,19 @@ struct camera_scene
 
     float scale      = scale0;
     vec3 translation = {};
+    vec3 light_translation = {};
     mat3 orientation = {};
+    mat3 light_orientation = {};
     perspective_structure perspective;
+    perspective_structure light_perspective;
 
     /** Compute the view matrix to be multiplied to vertices */
     mat4 view_matrix() const;
+    mat4 light_matrix() const;
     mat4 camera_matrix() const;
     /** Return the corresponding center of camera */
     vec3 camera_position() const;
+    vec3 light_position() const;
 
     camera_control_type camera_type;
     vec2 spherical_coordinates;

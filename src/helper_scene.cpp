@@ -73,6 +73,7 @@ void setup_scene(scene_structure &scene, gui_structure& gui)
     const float aspect_ratio = width/static_cast<float>(height);
 
     scene.camera.perspective = perspective_structure( 70*3.14f/180, aspect_ratio, 0.01f, 500.0f);
+    scene.camera.light_perspective = perspective_structure(50 * 3.14 / 180, 1, 0.05, 60);
 
     const image white{1,1,{255,255,255,255}};
     scene.texture_white = texture_gpu(white);
