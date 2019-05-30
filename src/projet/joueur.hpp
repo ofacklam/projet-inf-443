@@ -9,7 +9,7 @@
 class joueur {
 public: 
     virtual void setup();
-    virtual void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe=false, vcl::vec3 position = {0,0,0}, float angle = 0);
+    virtual void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe=false, vcl::vec3 position = {0,0,0}, float angle = 0, vcl::vec3 position_next = {0,0,0});
 
 private:
     vcl::mesh_drawable_hierarchy player;
