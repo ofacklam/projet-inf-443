@@ -195,7 +195,7 @@ void calculate_shadows() {
     // Change shaders
     GLuint mesh_shader = shaders["mesh"];
     shaders["mesh"] = shaders["shadows"];
-    exercise.frame_draw(shaders, scene, gui); opengl_debug();
+    exercise.frame_calc(shaders, scene, gui); opengl_debug();
     
 
     //Reset everything
@@ -243,9 +243,17 @@ void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    float increment = 0.05f;
-    if (key == GLFW_KEY_LEFT && action != GLFW_PRESS)
-        exercise.move -= increment;
-    if (key == GLFW_KEY_RIGHT && action != GLFW_PRESS)
-        exercise.move += increment;
+    if (key == GLFW_KEY_LEFT) {
+        if(action == GLFW_PRESS)
+            exercise.left = true;
+        if(action == GLFW_RELEASE)
+            exercise.left = false;
+    }
+
+    if (key == GLFW_KEY_RIGHT) {
+        if(action == GLFW_PRESS)
+            exercise.right = true;
+        if(action == GLFW_RELEASE)
+            exercise.right = false;
+    }
 }

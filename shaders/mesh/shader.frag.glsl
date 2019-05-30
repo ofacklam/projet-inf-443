@@ -23,7 +23,7 @@ uniform float specular = 0.5;
 uniform vec3 light;
 //vec3 light = 10 * camera_position;
 
-float bias = 0.000001;
+float bias = 0.00001;
 
 void main()
 {

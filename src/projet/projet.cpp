@@ -20,11 +20,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     theta = 0;
     move = 0;
     pos_joueur = {move, r, 0};
-    keyframe_time = {0,1};
 
-    timer.t_min = keyframe_time[0];
-    timer.t_max = keyframe_time[1];
-    timer.t = timer.t_min;
     timer.scale = 0.2f;
     rayon = 51.0f;
 
@@ -50,27 +46,65 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
     set_gui();
     glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 
+    float dt = timer.update();
+    float d_theta = v_theta * dt;
+
     if(!end_game) {
+        
+
         move_camera(scene);
-        theta = theta + d_theta;
+        
+        theta += d_theta;
 
         sky.draw(shaders, scene);
-        timer.update();
-        const float t = timer.t;
-        keyframe_position = {pos_joueur,{move, rayon*std::cos(theta -d_theta+ 3.14f*0.01),-rayon*std::sin(theta -d_theta+ 3.14f*0.01)}};
-        level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
-        pos_joueur = linear_interpolation(t,keyframe_time[0],keyframe_time[1],keyframe_position[0],keyframe_position[1]);
-        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, keyframe_position[1]); 
-        
-        /*mesh_drawable test = mesh_primitive_parallelepiped();
-        test.uniform_parameter.translation = gaussienne_canyon(-theta, 0.15);
-        test.uniform_parameter.scaling = 2;
-        test.draw(shaders["mesh"], scene.camera);*/
 
-        end_game = level.collision(pos_joueur, 1);
+        if(left) move -= vitesse * dt;
+        if(right) move += vitesse * dt;
+
+        level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
+
+        float x = move;
+        float y = rayon*std::cos(theta -d_theta+ 3.14f*0.01);
+        float z = -rayon*std::sin(theta -d_theta+ 3.14f*0.01);
+
+        vec3 old_pos = pos_joueur;
+
+        const float alpha = 0.05;
+        pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, old_pos); 
+
+        //end_game = level.collision(pos_joueur, 1);
     }
     else {
         lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},theta+d_theta);
+        lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
+        glBindTexture(GL_TEXTURE_2D, texture_lost);
+        lost.draw(shaders["mesh"], scene.camera);
+        //timer.t = 0;
+        //while(timer.t < 0.8) timer.update();
+        //glfwSetWindowShouldClose(gui.window, 1);
+    }
+}
+
+void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui)
+{
+    glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
+
+    if(!end_game) {
+        sky.draw(shaders, scene);
+
+        level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
+
+        float x = move;
+        float y = rayon*std::cos(theta);
+        float z = -rayon*std::sin(theta);
+
+        player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, {x, y, z}); 
+
+        //end_game = level.collision(pos_joueur, 1);
+    }
+    else {
+        lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({1,0,0},theta);
         lost.uniform_parameter.translation = pos_joueur - vec3(pos_joueur.x,0,0);
         glBindTexture(GL_TEXTURE_2D, texture_lost);
         lost.draw(shaders["mesh"], scene.camera);
@@ -86,13 +120,14 @@ void scene_exercise::set_gui()
 }
 
 void scene_exercise::move_camera(scene_structure& scene) {
+    const float retard = 0.25f;
     const float r = 51.0f;
 
     const float z0 = r*std::sin(theta);
-    const float zl = 1.5*r*std::sin(theta-500*d_theta);
+    const float zl = 1.5*r*std::sin(theta-retard);
 
     const float y0 = -r*std::cos(theta);
-    const float yl = -1.5*r*std::cos(theta-500*d_theta);
+    const float yl = -1.5*r*std::cos(theta-retard);
 
     const float x0 = scene.camera.translation[0];
 
