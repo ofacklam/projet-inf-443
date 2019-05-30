@@ -2,17 +2,16 @@
 
 using namespace vcl;
 
-mesh create_branch(float rad_a, float rad_b, float length) {
+mesh_drawable create_branch(float rad_a, float rad_b, float length) {
 
     //Number of samples on the circle
     const size_t N = 20;
-    const size_t size = 2*N;
     
     mesh cylinder;
     //Fill position
 
     for(size_t ku = 0; ku < N; ku++) {
-        float u = 2 * 3.14159f * ku / N;
+        float u = 2 * 3.14159f * ku / (N-1);
         float x1 = rad_a * std::cos(u);
         float y1 = rad_a * std::sin(u);
         float x2 = rad_b * std::cos(u);
@@ -20,18 +19,23 @@ mesh create_branch(float rad_a, float rad_b, float length) {
         vec3 n = normalize(vec3(x1, y1, 0));
 
         cylinder.position.push_back({x1, y1, 0});
+        cylinder.texture_uv.push_back({0, 2.0f*ku/(N-1)});
         cylinder.normal.push_back(n);
         cylinder.position.push_back({x2, y2, length});
+        cylinder.texture_uv.push_back({2, 2.0f*ku/(N-1)});
 
         cylinder.normal.push_back(n);
     }
 
     //Fill connectivity
-    for(size_t i = 0; i < size; i++) {
-        cylinder.connectivity.push_back({i%size, (i+1)%size, (i+2)%size});
+    for(size_t i = 0; i < 2*(N-1); i++) {
+        cylinder.connectivity.push_back({i, (i+1), (i+2)});
     }
+
+    mesh_drawable res = cylinder;
+    res.uniform_parameter.shading.specular = 0.0f;
     
-    return cylinder;
+    return res;
 }
 
 mesh_drawable_hierarchy create_mesh(std::vector<element> &tree, bool only_branch = false) {
@@ -40,7 +44,7 @@ mesh_drawable_hierarchy create_mesh(std::vector<element> &tree, bool only_branch
 
     // Start rendering from root
     assert(tree.size() > 0);
-    mesh cylinder = create_branch(tree[0].start_width, tree[0].end_width, tree[0].len);
+    mesh_drawable cylinder = create_branch(tree[0].start_width, tree[0].end_width, tree[0].len);
     hierarchy.add_element(cylinder, "0", "root");
 
     std::queue<int> to_treat;

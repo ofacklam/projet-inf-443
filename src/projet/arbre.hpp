@@ -13,4 +13,5 @@ public:
 
 private:
     vcl::mesh_drawable_hierarchy hierarchy;
+    GLuint texture_trunk;
 };

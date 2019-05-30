@@ -76,7 +76,7 @@ mesh create_terrain()
 
             // Compute coordinates
             terrain.position[kv+N*ku] = evaluate_terrain(theta,v);
-            terrain.texture_uv[kv+N*ku] = vec2(50*u,50*v);
+            terrain.texture_uv[kv+N*ku] = vec2(50*u,10*v);
         }
     }
     for(size_t kv=0; kv<N; ++kv) {
