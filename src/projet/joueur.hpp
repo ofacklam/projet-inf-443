@@ -1,6 +1,8 @@
 #pragma once
 
 #include <map>
+#include <cstring>
+#include <random>
 
 #include "../base_exercise/base_exercise.hpp"
 
@@ -12,4 +14,5 @@ public:
 private:
     vcl::mesh_drawable_hierarchy player;
     vcl::timer_interval timer;
+    int texture_dragon;
 };
