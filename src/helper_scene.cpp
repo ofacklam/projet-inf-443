@@ -56,6 +56,7 @@ void load_shaders(std::map<std::string,GLuint>& shaders)
     shaders["curve"] = create_shader_program("shaders/curve/shader.vert.glsl","shaders/curve/shader.frag.glsl");
     shaders["segment_im"] = create_shader_program("shaders/segment_immediate_mode/shader.vert.glsl","shaders/segment_immediate_mode/shader.frag.glsl");
     shaders["shadows"] = create_shader_program("shaders/shadow/shader.vert.glsl", "shaders/shadow/shader.frag.glsl");
+    shaders["debug"] = create_shader_program("shaders/debug/shader.vert.glsl", "shaders/debug/shader.frag.glsl");
 
     std::cout<<"\t [OK] Shader loaded"<<std::endl;
 }
