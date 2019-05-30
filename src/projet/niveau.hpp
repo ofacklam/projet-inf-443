@@ -7,9 +7,19 @@
 class niveau {
     public:
         niveau() {}
-        void setup(obstacle *o, terrain *t, int difficulte);
+        template<class T>
+        void setup(terrain *t, int difficulte) {
+            obs = new T();
+            ter = t;
+            ter->setup();
+            obs->setup();
+
+            generate_positions(difficulte, 3, 0);
+        }
+
         void draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vcl::vec3 pos_joueur, bool wireframe=false);
         bool collision(vcl::vec3 player_pos, float dist);
+        void generate_positions(uint N, float min_dist = 3, float z_off = 0);
 
     private:
         obstacle *obs;
@@ -18,5 +28,3 @@ class niveau {
 
         std::vector<vcl::vec3> obs_pos;
 };
-
-void generate_positions(uint N, std::vector<vcl::vec3> &arr, float min_dist, float z_off);

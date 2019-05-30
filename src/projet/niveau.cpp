@@ -2,14 +2,7 @@
 
 using namespace vcl;
 
-void niveau::setup(obstacle* o, terrain *t, int difficulte) {
-    obs = o;
-    ter = t;
-    ter->setup();
-    obs->setup();
 
-    generate_positions(difficulte, obs_pos, 3, 0);
-}
 
 void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vec3 pos_joueur, bool wireframe) {
     ter->draw(shaders, scene, wireframe);
@@ -39,13 +32,14 @@ bool niveau::collision(vec3 player_pos, float dist) {
 }
 
 
-void generate_positions(uint N, std::vector<vcl::vec3> &arr, float min_dist, float z_off)
+void niveau::generate_positions(uint N, float min_dist, float z_off)
 {
 
     std::uniform_real_distribution<float> dist_1(0.35, 0.65);
     std::uniform_real_distribution<float> dist_2pi(0.5, 2*3.14-0.5);
     std::random_device rd;
     std::default_random_engine gen(rd());
+    obs_pos.clear();
 
     for(uint k = 0; k < N; k++) {
         float theta = dist_2pi(gen);
@@ -55,7 +49,7 @@ void generate_positions(uint N, std::vector<vcl::vec3> &arr, float min_dist, flo
 
         bool too_close = false;
         for(uint i = 0; i < k; i++) {
-            if(norm(pos - arr[i]) <= min_dist) {
+            if(norm(pos - obs_pos[i]) <= min_dist) {
                 too_close = true;
                 break;
             }
@@ -64,6 +58,6 @@ void generate_positions(uint N, std::vector<vcl::vec3> &arr, float min_dist, flo
         if(too_close)
             k--;
         else
-            arr.push_back(pos + vec3(0, z_off*std::cos(theta), z_off*std::sin(theta)));
+            obs_pos.push_back(pos + vec3(0, z_off*std::cos(theta), z_off*std::sin(theta)));
     }
 }

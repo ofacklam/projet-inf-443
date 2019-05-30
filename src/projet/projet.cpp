@@ -28,7 +28,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
     //Set up level
     nb_obstacles = 50;
 
-    level.setup(new arbre(), new terrain(), nb_obstacles);
+    level.setup<arbre>(new terrain(), nb_obstacles);
     player.setup();
     sky.setup(  "data/ely_hills/hills_ft.png",
                 "data/ely_hills/hills_bk.png",
@@ -64,7 +64,7 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         v_theta += 0.05f;
         theta -= 2*3.14;
         nb_obstacles += 5;
-        level.setup(new arbre(), new terrain(), nb_obstacles);
+        level.generate_positions(nb_obstacles);
     }
 
     if(!end_game) {
@@ -89,7 +89,7 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x));
 
-        end_game = level.collision(pos_joueur, 1);
+        //end_game = level.collision(pos_joueur, 1);
     }
     else {
         timer.t = 0;
