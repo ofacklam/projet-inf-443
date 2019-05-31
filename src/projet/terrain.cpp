@@ -55,7 +55,7 @@ vec3 evaluate_terrain(float theta, float v)
     const float persistency = 0.5f;
     const float noise = perlin(scaling*r*std::cos(theta), scaling*r*v, scaling*r*std::sin(theta), octave, persistency);
 
-    const float x = normalize(v)/2;
+    const float x = normalize(v);
     const float y = (r+0.2*noise)*std::cos(theta);
     float z = (r+0.2*noise)*std::sin(theta);
 
