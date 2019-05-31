@@ -13,7 +13,7 @@ GLFWwindow* create_window(const std::string& window_title)
 
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,nullptr/*glfwGetPrimaryMonitor()*/);
+    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,glfwGetPrimaryMonitor());
     return window;
 }
 
