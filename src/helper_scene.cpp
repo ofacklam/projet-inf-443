@@ -13,7 +13,7 @@ GLFWwindow* create_window(const std::string& window_title)
 
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,glfwGetPrimaryMonitor());
+    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,nullptr/*glfwGetPrimaryMonitor()*/);
     return window;
 }
 
@@ -94,7 +94,7 @@ void update_fps_title(GLFWwindow* window, const std::string& title, glfw_fps_cou
     }
 }
 
-void gui_start_basic_structure(gui_structure& gui, scene_structure& scene, const std::map<std::string,GLuint>& shaders)
+void gui_start_basic_structure(gui_structure& gui)
 {
     imgui_create_frame();
 

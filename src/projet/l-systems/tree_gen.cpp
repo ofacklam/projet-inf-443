@@ -28,7 +28,7 @@ mesh_drawable create_branch(float rad_a, float rad_b, float length) {
     }
 
     //Fill connectivity
-    for(size_t i = 0; i < 2*(N-1); i++) {
+    for(unsigned int i = 0; i < 2*(N-1); i++) {
         cylinder.connectivity.push_back({i, (i+1), (i+2)});
     }
 

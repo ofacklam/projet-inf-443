@@ -6,17 +6,19 @@ void terrain::setup() {
     // Create visual terrain surface
     terrain_ = create_terrain();
     canyon_ = create_canyon();
-    terrain_.uniform_parameter.color = {0.6f,0.85f,0.5f};
     terrain_.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
     canyon_.uniform_parameter.shading.specular = 0.0f;
     texture_canyon = texture_gpu(image_load_png("data/maxresdefault.png"));
     texture_sol = texture_gpu(image_load_png("data/grass.png"));
+    texture_lune = texture_gpu(image_load_png("data/moon.png"));
 }
 
 void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
     // Display terrain
     glPolygonOffset( 1.0, 1.0 );
     if(!wireframe){
+        terrain_.uniform_parameter.color = {0.6f,0.85f,0.5f};
+        terrain_.uniform_parameter.shading.ambiant = 0.3f;
         glBindTexture(GL_TEXTURE_2D, texture_sol);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -28,7 +30,12 @@ void terrain::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene
         glBindTexture(GL_TEXTURE_2D, scene.texture_white);
     } else { // wireframe if asked from the GUI
         glPolygonOffset( 1.0, 1.0 );
-        terrain_.draw(shaders["wireframe"], scene.camera);
+        terrain_.uniform_parameter.color = {1.0f,1.0f,1.0};
+        terrain_.uniform_parameter.shading.ambiant = 0.0f;
+        glBindTexture(GL_TEXTURE_2D, texture_lune);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        terrain_.draw(shaders["mesh"], scene.camera);
         canyon_.draw(shaders["wireframe"], scene.camera);
     }
 }
@@ -48,7 +55,7 @@ vec3 evaluate_terrain(float theta, float v)
     const float persistency = 0.5f;
     const float noise = perlin(scaling*r*std::cos(theta), scaling*r*v, scaling*r*std::sin(theta), octave, persistency);
 
-    const float x = normalize(v);
+    const float x = normalize(v)/2;
     const float y = (r+0.2*noise)*std::cos(theta);
     float z = (r+0.2*noise)*std::sin(theta);
 
@@ -58,7 +65,7 @@ vec3 evaluate_terrain(float theta, float v)
 // Generate terrain mesh
 mesh create_terrain()
 {
-    // Number of samples of the terrain is N x N
+    // Number of samples of the terrain is N x (N+1)
     const size_t N = 1000;
 
     mesh terrain; // temporary terrain storage (CPU only)

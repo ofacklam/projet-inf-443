@@ -37,9 +37,6 @@ const unsigned int SHADOW_WIDTH = 10000, SHADOW_HEIGHT = 10000;
 // GLFW event listeners
 // ************************************** //
 
-void window_size_callback(GLFWwindow* /*window*/, int width, int height);
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-void mouse_click_callback(GLFWwindow* window, int button, int action, int mods);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 
@@ -93,9 +90,6 @@ int main()
     initialize_interface(gui);
 
     // Set GLFW events listener
-    glfwSetCursorPosCallback(gui.window, cursor_position_callback );
-    glfwSetMouseButtonCallback(gui.window, mouse_click_callback);
-    glfwSetWindowSizeCallback(gui.window, window_size_callback);
     glfwSetKeyCallback(gui.window, key_callback);
 
     load_shaders(shaders);
@@ -123,7 +117,7 @@ int main()
         opengl_debug();
 
         // Create the basic gui structure with ImGui
-        gui_start_basic_structure(gui,scene, shaders);
+        gui_start_basic_structure(gui);
 
         // Perform computation and draw calls for each iteration loop
         calculate_shadows();
@@ -224,25 +218,7 @@ void render_scene() {
     exercise.frame_draw(shaders, scene, gui); opengl_debug();
 }
 
-void window_size_callback(GLFWwindow* /*window*/, int width, int height)
-{
-    glViewport(0, 0, width, height);
-    scene.camera.perspective.image_aspect = width / static_cast<float>(height);;
-}
-
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    scene.camera_control.update_mouse_move(scene.camera, window, float(xpos), float(ypos));
-    exercise.mouse_move(scene, window);
-}
-void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    ImGui::SetWindowFocus(nullptr);
-    scene.camera_control.update_mouse_click(scene.camera, window, button, action, mods);
-    exercise.mouse_click(scene, window,button,action,mods);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void key_callback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/) {
     if (key == GLFW_KEY_LEFT) {
         if(action == GLFW_PRESS)
             exercise.left = true;

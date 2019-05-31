@@ -15,6 +15,7 @@ class terrain {
         vcl::mesh_drawable canyon_;  
         int texture_canyon;
         int texture_sol;
+        int texture_lune;
 };
 
 float normalize(float u);

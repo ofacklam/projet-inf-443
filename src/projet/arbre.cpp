@@ -10,7 +10,7 @@ void arbre::setup() {
 }
 
 
-void arbre::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vcl::vec3 position, vcl::mat3 rotation, vcl::vec3 scaling, bool wireframe) {
+void arbre::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, vcl::vec3 position, vcl::mat3 rotation, bool wireframe) {
     hierarchy.rotation("0") = rotation;
     hierarchy.translation("0") = position;
 

@@ -8,9 +8,9 @@ void niveau::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
     ter->draw(shaders, scene, wireframe);
     srand(time(NULL));
 
-    for(int i = 0; i < obs_pos.size();i++) {
+    for(unsigned int i = 0; i < obs_pos.size();i++) {
         if(norm(obs_pos[i]-pos_joueur) < 20) {
-            obs[obs_type[i]]->draw(shaders, scene, obs_pos[i], rotation_between_vector_mat3({0, 0, 1}, {0, obs_pos[i].y, obs_pos[i].z}), vec3(1, 1, 1), wireframe);
+            obs[obs_type[i]]->draw(shaders, scene, obs_pos[i], rotation_between_vector_mat3({0, 0, 1}, {0, obs_pos[i].y, obs_pos[i].z}), wireframe);
         }
     }
 }
