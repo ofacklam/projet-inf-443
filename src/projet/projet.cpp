@@ -47,6 +47,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
                 "data/ame_nebula/purplenebula_dn.png");
     texture_lost = texture_gpu(image_load_png("data/lost.png"));
     lost = mesh_primitive_quad({-1,1,0},{1,1,0},{1,-1,0},{-1,-1,0});
+    lost.uniform_parameter.shading.ambiant = 1.0f;
     lvlup = mesh_primitive_quad({-8,rayon+7,0},{8,rayon+7,0},{8,rayon-2,0},{-8,rayon-2,0});
     lvlup.uniform_parameter.shading.specular = 0.0f;
     lvlup.uniform_parameter.shading.ambiant = 1.0f;
@@ -81,7 +82,6 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
         if(left) move -= vitesse * dt;
         if(right) move += vitesse * dt;
 
-        level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
 
         float x = move;
         float y =  rayon*std::cos(theta -d_theta+ 3.14f*0.01);
@@ -91,10 +91,12 @@ void scene_exercise::frame_calc(std::map<std::string,GLuint>& shaders, scene_str
 
         const float alpha = 0.05;
         pos_joueur = {alpha * x + (1-alpha) * pos_joueur.x, y, z};
-        if(!gui_scene.wireframe)
+        if(!gui_scene.wireframe) {
             player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x), text);
+            level.draw(shaders, scene, pos_joueur, gui_scene.wireframe);
+        }
 
-        //end_game = level.collision(pos_joueur, 1);
+        if(!gui.godmode) end_game = level.collision(pos_joueur, 1);
     }
     else {
         timer.t = 0;
@@ -118,7 +120,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
         player.draw(shaders, scene, gui_scene.wireframe, pos_joueur, theta, 30 * (pos_joueur.x - old_pos.x), text);
 
-        //end_game = level.collision(pos_joueur, 1);
+        if(!gui.godmode) end_game = level.collision(pos_joueur, 1);
     }
     else {
         lost.uniform_parameter.rotation = rotation_from_axis_angle_mat3({-1,0,0},theta);

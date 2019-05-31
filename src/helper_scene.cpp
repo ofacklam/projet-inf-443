@@ -16,7 +16,7 @@ GLFWwindow* create_window(const std::string& window_title)
     //const int window_width  = 2560;
     //const int window_height = 1440;
 
-    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,nullptr);
+    GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,glfwGetPrimaryMonitor());
     return window;
 }
 
@@ -101,16 +101,6 @@ void gui_start_basic_structure(gui_structure& gui, scene_structure& scene, const
 {
     imgui_create_frame();
 
-    ImGui::Begin("GUI",NULL,ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Checkbox("Frame camera", &gui.show_frame_camera);
-    ImGui::Checkbox("Frame worldspace", &gui.show_frame_worldspace);
-
-    if(gui.show_frame_camera)
-    {
-        scene.frame_camera.uniform_parameter.translation = -scene.camera.translation;
-        scene.frame_camera.draw(shaders.at("mesh"),scene.camera);
-    }
-    if(gui.show_frame_worldspace)
-        scene.frame_worldspace.draw(shaders.at("mesh"),scene.camera);
-
+    ImGui::Begin("Si vous etes nuls cliquez ici",NULL,ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Checkbox("GOD MODE                    ", &gui.godmode);
 }

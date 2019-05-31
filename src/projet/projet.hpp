@@ -13,6 +13,7 @@
 struct gui_scene_structure
 {
     bool wireframe;
+    bool godmode;
 };
 
 struct scene_exercise : base_scene_exercise
