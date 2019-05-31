@@ -61,7 +61,7 @@ void renderQuad()
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
             -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
              1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,true
         };
         // setup plane VAO
         glGenVertexArrays(1, &quadVAO);
