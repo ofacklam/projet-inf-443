@@ -12,9 +12,6 @@ GLFWwindow* create_window(const std::string& window_title)
     const int opengl_version_minor = 3;
 
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    //glfwGetMonitorSize(glfwGetPrimaryMonitor(), &window_width, &window_height);
-    //const int window_width  = 2560;
-    //const int window_height = 1440;
 
     GLFWwindow* window = vcl::glfw_create_window(mode->width, mode->height, window_title, opengl_version_major, opengl_version_minor,glfwGetPrimaryMonitor());
     return window;

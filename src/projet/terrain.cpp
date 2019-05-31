@@ -112,7 +112,6 @@ vec3 gaussienne_canyon(float theta, float v) {
     const int octave = 4;
     const float persistency = 0.5f;
     float noise = perlin(scaling*std::cos(theta), scaling*v, scaling*std::sin(theta), octave, persistency);
-    //noise = (u>0.5f) ? -noise : noise;
     
     const float x = normalize(v);
     const float y = (radius+noise)*std::cos(theta);
@@ -159,15 +158,5 @@ mesh create_canyon() {
             canyon.connectivity.push_back(triangle_2);
         }
     }
-    /*
-    std::uniform_real_distribution<float> distrib(0.5,1.0);
-    std::default_random_engine generator;
-
-    for(int i = 0; i<10; i++) {
-        mesh_drawable patate = mesh_primitive_sphere(distrib(generator));
-        patate.uniform_parameter.translation = {i,2.0f,0.0f};
-        canyon.push_back(patate);
-    }
-*/
     return canyon;
 }

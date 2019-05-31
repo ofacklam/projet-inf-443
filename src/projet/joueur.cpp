@@ -38,6 +38,7 @@ void joueur::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
     player.translation("corps") = position + rotation_from_axis_angle_mat3({1,0,0},-(angle+0.2f))*vec3(0,-0.05*std::sin(2*3.14f*(t-0.4f)),0);
     player2.uniform_parameter.translation = position;
     player2.uniform_parameter.rotation = player.rotation("corps");
+    
     const float aile = std::sin(2*3.14f*(t-0.4f));
     player.rotation("ag1") = rotation_from_axis_angle_mat3({0,0,1}, aile);
     player.rotation("ad1") = rotation_from_axis_angle_mat3({0,0,-1}, aile);

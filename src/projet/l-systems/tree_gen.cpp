@@ -261,8 +261,6 @@ void ternary::create_struct(std::vector<element> &tree, int num_iter) {
 
         // Choose index of element to subdivide
         for(int idx = 0; idx < n; idx++) {
-            //std::uniform_int_distribution<int> d(0, n-1);
-            //int idx = d(gen);
 
             element elem = tree[idx];
 
